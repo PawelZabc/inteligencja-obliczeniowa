@@ -1,5 +1,9 @@
 import math
-import time
+import random
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 
 class Vector():
@@ -9,53 +13,66 @@ class Vector():
     def add(self,vector):
         self.x += vector.x
         self.y += vector.y
-    def set(self,x:None,y:None):
-        if x!=None:
-            self.x = x
-        if y!=None:
-            self.y = y
-    def string(self):
+    def __repr__(self):
         return f"x:{self.x},y:{self.y}"
     def times(self,number):
         return Vector(self.x * number,self.y * number)
-        
-        
-
-y0 = 100
-v0 = 50
-x0 = 0
-velocity = Vector()
-gravity = Vector(0,-10)
-position = Vector(0,100)
-
-def step(seconds = 1):
-    velocity.add(gravity.times(seconds))
-    position.add(velocity.times(seconds))
+    def array(self):
+        return [self.x,self.y]
 
 def starting_velocity(alpha):
-    x = math.sin(alpha)*v0
-    y = math.cos(alpha)*v0
-    return Vector(x,y)
+        x = math.sin(alpha)*v0
+        y = math.cos(alpha)*v0
+        return Vector(x,y)  
+
+y0=100
+v0=50
+x0=0
+gravity = Vector(0,-9.8) 
+
+    
+def shoot(angle,goal):
+    velocity = starting_velocity(math.radians(angle))
+    position = Vector(x0,y0)
+    def step(seconds = 1):
+        velocity.add(gravity.times(seconds))
+        position.add(velocity.times(seconds))
+    x_pos = []
+    y_pos = []
+    while position.y >= 0:
+        x_pos.append(position.x)
+        y_pos.append(position.y)
+        step(0.01)
+    
+    plt.axline((position.x, 0), (position.x, 1), linewidth=1, color='r', ls="--")
+    plt.axline((goal, 0), (goal, 1), linewidth=1, color='black', ls="--")
+    xpoints = np.array(x_pos)
+    ypoints = np.array(y_pos)
+    plt.plot(xpoints,ypoints)
+    plt.axline((0,0), (1, 0), linewidth=2, color='black')
+    plt.grid()
+    plt.show()
+
+    return position
 
 
-velocity = starting_velocity(math.radians(45))
-print(velocity.string())
 
-while position.y >= 0:
-    step(0.01)
-    # step()
-    # time.sleep(0.0)
-    print("-"*80)
-    print(position.string())
-    print(velocity.string())
-    x=math.floor(position.x/5)
-    y=math.floor(position.y/10)
-    print(x,y)
-    for i in range(20,0,-1):
-        string = "|"
-        for j in range(80):
-            if i == y and j == x:
-                string+="0"
-            else:
-                string+=" "
-        print(string)
+
+
+goal = random.randint(0,350)
+print(f"Twój cel to {goal}")
+num_of_shots = 0
+while (True):
+    num_of_shots+=1
+    print("Wpisz kąt:")
+    angle = int(input())
+    end = shoot(angle,goal)
+    print(f"Uderzyłeś na odległość {end.x}")
+    if abs(end.x-goal)<=10:
+        print("Udało ci się!")
+        break
+    else:
+        print("Pudło :[")
+
+
+
