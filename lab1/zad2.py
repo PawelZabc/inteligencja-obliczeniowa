@@ -43,23 +43,29 @@ def shoot(angle,goal):
         x_pos.append(position.x)
         y_pos.append(position.y)
         step(0.01)
-    
-    plt.axline((position.x, 0), (position.x, 1), linewidth=1, color='r', ls="--")
-    plt.axline((goal, 0), (goal, 1), linewidth=1, color='black', ls="--")
-    xpoints = np.array(x_pos)
-    ypoints = np.array(y_pos)
-    plt.plot(xpoints,ypoints)
-    plt.axline((0,0), (1, 0), linewidth=2, color='black')
-    plt.grid()
-    plt.show()
+    print(f"Uderzyłeś na odległość {position.x}")
+    if abs(position.x-goal)<=5:
+        plt.axline((position.x, 0), (position.x, 1), linewidth=1, color='r', ls="--")
+        plt.axline((goal, 0), (goal, 1), linewidth=1, color='black', ls="--")
+        xpoints = np.array(x_pos)
+        ypoints = np.array(y_pos)
+        plt.plot(xpoints,ypoints)
+        plt.axline((0,0), (1, 0), linewidth=2, color='black')
+        plt.grid()
+        plt.title("Trajectory")
+        plt.xlabel("Distance(m)")
+        plt.ylabel("Height(m)")
+        plt.savefig("trajektoria.png")
+        print("Udało ci się!")
+        return True
 
-    return position
+    return False
 
 
 
 
 
-goal = random.randint(0,350)
+goal = random.randint(50,340)
 print(f"Twój cel to {goal}")
 num_of_shots = 0
 while (True):
@@ -67,12 +73,12 @@ while (True):
     print("Wpisz kąt:")
     angle = int(input())
     end = shoot(angle,goal)
-    print(f"Uderzyłeś na odległość {end.x}")
-    if abs(end.x-goal)<=10:
-        print("Udało ci się!")
+    if end:
+        print(f"Ilość sztrzałów:{num_of_shots}")
         break
     else:
         print("Pudło :[")
+        
 
 
 
