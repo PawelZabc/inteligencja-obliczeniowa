@@ -7,7 +7,6 @@ from pyswarms.utils.plotters import plot_cost_history
 import matplotlib.pyplot as plt
 from run_simulation import run_simulation
 
-# Plik logujący cząstki
 with open("pyswarm_particles.csv", mode='w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(["Iteration", "Particle", "Fitness","TimeElapsed"] + [f"Param{i}" for i in range(18)])
@@ -32,15 +31,15 @@ def fitness(input):
             writer.writerow(
                 [current_iteration, i, -fitness_value, round(elapsed_time, 4)] + rounded_particle
             )
-            output.append(fitness_value)  # negatyw bo PSO minimalizuje
+            output.append(fitness_value) 
     return output
 
 options = {'c1': 0.3, 'c2': 0.9, 'w': 0.9}
 
 
 my_bounds = (
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],  # dolne granice
-    [50, 50, 50, 50, 50, 50, 50, 5, 50, 50, 50, 50, 5, 50, 50, 50, 5, 50]   # górne granice
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], 
+    [50, 50, 50, 50, 50, 50, 50, 5, 50, 50, 50, 50, 5, 50, 50, 50, 5, 50]  
 )
 
 optimizer = ps.single.GlobalBestPSO(n_particles=20, dimensions=18, options=options, bounds=my_bounds)
@@ -56,7 +55,6 @@ print(f"Najlepszy fitness: {-best_cost}")
 run_simulation(best_params,simulation=False)
 
 
-# Wykres kosztu
 plot_cost_history(optimizer.cost_history)
 plt.title("Historia funkcji celu (negatywna wartość)")
 plt.show()
